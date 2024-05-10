@@ -5,47 +5,38 @@ print("La data deve essere del formato YYYY-MM-DD")
 start = input("Inserisci una data da cui iniziare: ")
 stop = input("Inserisci una data in cui finire: ")
 corpi_celesti = {
-    "Mercurio": {"selected": "no",
-                 "number_option": 1,
+    "Mercurio": {"selected": False,
                  "number_horizon": 199,
                  },
-    "Venere": {"selected": "no",
-                 "number_option": 2,
+    "Venere": {"selected": False,
                  "number_horizon": 299,
                  },
-    "Terra": {"selected": "no",
-                 "number_option": 3,
+    "Terra": {"selected": False,
                  "number_horizon": 399,
                  },
-    "Marte": {"selected": "no",
-                 "number_option": 4,
+    "Marte": {"selected": False,
                  "number_horizon": 499,
                  },
-    "Giove": {"selected": "no",
-                 "number_option": 5,
+    "Giove": {"selected": False,
                  "number_horizon": 599,
                  },
-    "Saturno": {"selected": "no",
-                 "number_option": 6,
+    "Saturno": {"selected": False,
                  "number_horizon": 699,
                  },
-    "Urano": {"selected": "no",
-                 "number_option": 7,
+    "Urano": {"selected": False,
                  "number_horizon": 799,
                  },
-    "Nettuno": {"selected": "no",
-                 "number_option": 8,
+    "Nettuno": {"selected": False,
                  "number_horizon": 899,
                  },
-    "Luna": {"selected": "no",
-                 "number_option": 9,
+    "Luna": {"selected": False,
                  "number_horizon": 301,
                  }
     }
 while True:
     print("Selezionare un corpo celeste:")
     for body in corpi_celesti:
-        if corpi_celesti[body]["selected"] == "yes":
+        if corpi_celesti[body]["selected"]:
             print("[X] - " + body)
         else:
             print("[ ] - " + body)
@@ -53,14 +44,12 @@ while True:
     option = input("Inserire l'opzione: ")
     if option == 'G':
         break
-    if corpi_celesti[option]["selected"] == "no":
-        corpi_celesti[option]["selected"] = "yes"
-    else:
-        corpi_celesti[option]["selected"] = "no"
+    corpi_celesti[option]["selected"] = not corpi_celesti[option]["selected"]
 
 for body in corpi_celesti:
-    if corpi_celesti[body]["selected"] == "yes":
-        address = 'https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27' + str(corpi_celesti[body]["number_horizon"]) + '%27&OBJ_DATA=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CSV_FORMAT=%27YES%27&START_TIME=%27' + start + '%27&STOP_TIME=%27' + stop + '%27&STEP_SIZE=%271%20d%27'
+#https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%272%27&OBJ_DATA=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27@sun%27&OUT_UNITS=%27AU-D%27&CSV_FORMAT=%27YES%27&START_TIME=%272006-01-01%27&STOP_TIME=%272006-01-20%27&STEP_SIZE=%271%20d%27
+    if corpi_celesti[body]["selected"]:
+        address = 'https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27' + str(corpi_celesti[body]["number_horizon"]) + '%27&OBJ_DATA=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27@sun%27&CSV_FORMAT=%27YES%27&START_TIME=%27' + start + '%27&STOP_TIME=%27' + stop + '%27&STEP_SIZE=%271%20d%27'
         sp = subprocess.Popen(['wget.exe', '-O', 'data', address])
 
         if sp.wait()!=0:
