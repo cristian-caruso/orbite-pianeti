@@ -1,77 +1,96 @@
-import subprocess
-from matplotlib import pyplot as plt
+from tkinter import *
+from tkcalendar import *
+import datetime
 
-print("La data deve essere del formato YYYY-MM-DD")
-start = input("Inserisci una data da cui iniziare: ")
-stop = input("Inserisci una data in cui finire: ")
-corpi_celesti = {
-    "Mercurio": {"selected": False,
-                 "number_horizon": 199,
-                 },
-    "Venere": {"selected": False,
-                 "number_horizon": 299,
-                 },
-    "Terra": {"selected": False,
-                 "number_horizon": 399,
-                 },
-    "Marte": {"selected": False,
-                 "number_horizon": 499,
-                 },
-    "Giove": {"selected": False,
-                 "number_horizon": 599,
-                 },
-    "Saturno": {"selected": False,
-                 "number_horizon": 699,
-                 },
-    "Urano": {"selected": False,
-                 "number_horizon": 799,
-                 },
-    "Nettuno": {"selected": False,
-                 "number_horizon": 899,
-                 },
-    "Luna": {"selected": False,
-                 "number_horizon": 301,
-                 }
-    }
-while True:
-    print("Selezionare un corpo celeste:")
-    for body in corpi_celesti:
-        if corpi_celesti[body]["selected"]:
-            print("[X] - " + body)
-        else:
-            print("[ ] - " + body)
-    print("Premere G per il grafico")
-    option = input("Inserire l'opzione: ")
-    if option == 'G':
-        break
-    corpi_celesti[option]["selected"] = not corpi_celesti[option]["selected"]
+root = Tk()
+root.title("Orbite pianeti")
+root.iconbitmap('img/icon.ico')
+root.geometry('1300x900')
+root.resizable(False, False)
 
-for body in corpi_celesti:
-#https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%272%27&OBJ_DATA=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27@sun%27&OUT_UNITS=%27AU-D%27&CSV_FORMAT=%27YES%27&START_TIME=%272006-01-01%27&STOP_TIME=%272006-01-20%27&STEP_SIZE=%271%20d%27
-    if corpi_celesti[body]["selected"]:
-        address = 'https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27' + str(corpi_celesti[body]["number_horizon"]) + '%27&OBJ_DATA=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27@sun%27&CSV_FORMAT=%27YES%27&START_TIME=%27' + start + '%27&STOP_TIME=%27' + stop + '%27&STEP_SIZE=%271%20d%27'
-        sp = subprocess.Popen(['wget.exe', '-O', 'data', address])
+#fonts
+import pyglet
+pyglet.font.add_file('fonts/title.ttf')
+pyglet.font.add_file('fonts/scritte.otf')
 
-        if sp.wait()!=0:
-            import sys
-            sys.exit(2)
+#background
+bg = PhotoImage(file='img/bg.png').subsample(2)
+canvas = Canvas(root, width = 1100, height = 900)
+canvas.pack(fill = "both", expand = True)
+canvas.create_image(0,0,image = bg, anchor = 'nw')
 
-        fhand = open('data','r')
-        line = fhand.readline()
-        while line !='$$SOE\n':
-            line = fhand.readline()
-        line = fhand.readline()
+#title
+canvas.create_text(500, 100, anchor = "n",
+                   text="Orbite dei pianeti",
+                   fill="white",
+                   font=("Space Crusaders", 42))
 
-        data_x = []
-        data_y = []
 
-        while line!='$$EOE\n':
-            line_data = line.split(',')
-            data_x.append(float(line_data[2]))
-            data_y.append(float(line_data[3]))
-            line = fhand.readline()
-        fhand.close()
+#form
+form = Frame(root)
+canvas.create_window(420,500,window=form)
 
-        plt.plot(data_x, data_y)
+#calendari
+Label(form, text="Scegliere una data di inizio", font=("Nasalization Rg", 15)).grid(row = 0, column = 0, pady = 10)
+calendar_start = Calendar(form, selectmode="day",
+                    year=datetime.datetime.now().year,
+                    month = datetime.datetime.now().month,
+                    day = datetime.datetime.now().day-1,
+                    background = "white",
+                    borderwidth = 10,
+                    locale = "it_IT",
+                    bordercolor = "white",
+                    headersbackground = "#6bcbff",
+                    headersforeground = "black",
+                    foreground = "black",
+                    selectbackground = "#21b1ff",
+                    weekendbackground = "white",
+                    weekendforeground = "black",
+                    font=("Nasalization Rg", 10)).grid(row = 1, column = 0, padx = 15)
+Label(form, text="Scegliere una data di fine", font=("Nasalization Rg", 15)).grid(row = 0, column = 1, pady = 10)
+calendar_stop = Calendar(form, selectmode="day",
+                    year=datetime.datetime.now().year,
+                    month = datetime.datetime.now().month,
+                    day = datetime.datetime.now().day,
+                    background = "white",
+                    borderwidth = 10,
+                    locale = "it_IT",
+                    bordercolor = "white",
+                    headersbackground = "#6bcbff",
+                    headersforeground = "black",
+                    foreground = "black",
+                    selectbackground = "#21b1ff",
+                    weekendbackground = "white",
+                    weekendforeground = "black",
+                    font=("Nasalization Rg", 10)).grid(row = 1, column = 1, padx = 15)
 
-plt.show()
+Label(form, text = "Selezionare i corpi celesti", font = ("Nasalization Rg", 15)).grid(row = 2,
+                                                                                       column = 0,
+                                                                                       columnspan = 2,
+                                                                                       pady = 30)
+Checkbutton(form, text = "Mercurio", font = ("Nasalization Rg", 13)).grid(row = 3, column = 0, sticky = "w", padx = 20)
+Checkbutton(form, text = "Venere").grid(row = 4, column = 0, sticky = "w")
+Checkbutton(form, text = "Terra").grid(row = 5, column = 0, sticky = "w")
+Checkbutton(form, text = "Marte").grid(row = 6, column = 0, sticky = "w")
+Checkbutton(form, text = "Giove").grid(row = 7, column = 0, sticky = "w")
+
+Checkbutton(form, text = "Saturno").grid(row = 3, column = 1, sticky = "w")
+Checkbutton(form, text = "Urano").grid(row = 4, column = 1, sticky = "w")
+Checkbutton(form, text = "Nettuno").grid(row = 5, column = 1, sticky = "w")
+Checkbutton(form, text = "Luna").grid(row = 6, column = 1, sticky = "w")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+root.mainloop()
