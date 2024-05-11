@@ -1,9 +1,11 @@
 from tkinter import *
 from tkcalendar import *
+from tkinter import messagebox
 import datetime
+import script
 
 root = Tk()
-root.title("Orbite pianeti")
+root.title("Orbite dei corpi celesti")
 root.iconbitmap('img/icon.ico')
 root.geometry('1300x900')
 root.resizable(False, False)
@@ -20,10 +22,51 @@ canvas.pack(fill = "both", expand = True)
 canvas.create_image(0,0,image = bg, anchor = 'nw')
 
 #title
-canvas.create_text(500, 100, anchor = "n",
-                   text="Orbite dei pianeti",
+canvas.create_text(414, 100, anchor = "n",
+                   text="Orbite dei corpi celesti",
                    fill="white",
                    font=("Space Crusaders", 42))
+
+#variables
+corpi_celesti = {
+    "Mercurio": {"selected": 0,
+                 "number_horizon": 199,
+                 },
+    "Venere": {"selected": 0,
+                 "number_horizon": 299,
+                 },
+    "Terra": {"selected": 0,
+                 "number_horizon": 399,
+                 },
+    "Marte": {"selected": 0,
+                 "number_horizon": 499,
+                 },
+    "Giove": {"selected": 0,
+                 "number_horizon": 599,
+                 },
+    "Saturno": {"selected": 0,
+                 "number_horizon": 699,
+                 },
+    "Urano": {"selected": 0,
+                 "number_horizon": 799,
+                 },
+    "Nettuno": {"selected": 0,
+                 "number_horizon": 899,
+                 },
+    "Luna": {"selected": 0,
+                 "number_horizon": 301,
+                 }
+    }
+
+mercurio = IntVar()
+venere = IntVar()
+terra = IntVar()
+marte = IntVar()
+giove = IntVar()
+saturno = IntVar()
+urano = IntVar()
+nettuno = IntVar()
+luna = IntVar()
 
 
 #form
@@ -32,13 +75,15 @@ canvas.create_window(420,500,window=form)
 
 #calendari
 Label(form, text="Scegliere una data di inizio", font=("Nasalization Rg", 15)).grid(row = 0, column = 0, pady = 10)
-calendar_start = Calendar(form, selectmode="day",
+calendar_start = Calendar(form,
+                    selectmode = "day",
                     year=datetime.datetime.now().year,
                     month = datetime.datetime.now().month,
                     day = datetime.datetime.now().day-1,
                     background = "white",
                     borderwidth = 10,
                     locale = "it_IT",
+                    date_pattern = "yyyy-mm-dd",
                     bordercolor = "white",
                     headersbackground = "#6bcbff",
                     headersforeground = "black",
@@ -46,12 +91,14 @@ calendar_start = Calendar(form, selectmode="day",
                     selectbackground = "#21b1ff",
                     weekendbackground = "white",
                     weekendforeground = "black",
-                    font=("Nasalization Rg", 10)).grid(row = 1, column = 0, padx = 15)
+                    font=("Nasalization Rg", 10))
+calendar_start.grid(row = 1, column = 0, padx = 15)
 Label(form, text="Scegliere una data di fine", font=("Nasalization Rg", 15)).grid(row = 0, column = 1, pady = 10)
 calendar_stop = Calendar(form, selectmode="day",
                     year=datetime.datetime.now().year,
                     month = datetime.datetime.now().month,
                     day = datetime.datetime.now().day,
+                    date_pattern = "yyyy-mm-dd",
                     background = "white",
                     borderwidth = 10,
                     locale = "it_IT",
@@ -62,22 +109,60 @@ calendar_stop = Calendar(form, selectmode="day",
                     selectbackground = "#21b1ff",
                     weekendbackground = "white",
                     weekendforeground = "black",
-                    font=("Nasalization Rg", 10)).grid(row = 1, column = 1, padx = 15)
+                    font=("Nasalization Rg", 10))
+calendar_stop.grid(row = 1, column = 1, padx = 15)
 
 Label(form, text = "Selezionare i corpi celesti", font = ("Nasalization Rg", 15)).grid(row = 2,
                                                                                        column = 0,
                                                                                        columnspan = 2,
                                                                                        pady = 30)
-Checkbutton(form, text = "Mercurio", font = ("Nasalization Rg", 13)).grid(row = 3, column = 0, sticky = "w", padx = 20)
-Checkbutton(form, text = "Venere").grid(row = 4, column = 0, sticky = "w")
-Checkbutton(form, text = "Terra").grid(row = 5, column = 0, sticky = "w")
-Checkbutton(form, text = "Marte").grid(row = 6, column = 0, sticky = "w")
-Checkbutton(form, text = "Giove").grid(row = 7, column = 0, sticky = "w")
+Checkbutton(form, variable = mercurio, text = "Mercurio", font = ("Nasalization Rg", 13)).grid(row = 3, column = 0, sticky = "w", padx = 40)
+Checkbutton(form, variable = venere, text = "Venere", font = ("Nasalization Rg", 13)).grid(row = 4, column = 0, sticky = "w", padx = 40)
+Checkbutton(form, variable = terra, text = "Terra", font = ("Nasalization Rg", 13)).grid(row = 5, column = 0, sticky = "w", padx = 40)
+Checkbutton(form, variable = marte, text = "Marte", font = ("Nasalization Rg", 13)).grid(row = 6, column = 0, sticky = "w", padx = 40)
+Checkbutton(form, variable = giove, text = "Giove", font = ("Nasalization Rg", 13)).grid(row = 7, column = 0, sticky = "w", padx = 40)
 
-Checkbutton(form, text = "Saturno").grid(row = 3, column = 1, sticky = "w")
-Checkbutton(form, text = "Urano").grid(row = 4, column = 1, sticky = "w")
-Checkbutton(form, text = "Nettuno").grid(row = 5, column = 1, sticky = "w")
-Checkbutton(form, text = "Luna").grid(row = 6, column = 1, sticky = "w")
+Checkbutton(form, variable = saturno, text = "Saturno", font = ("Nasalization Rg", 13)).grid(row = 3, column = 1, sticky = "w", padx = 80)
+Checkbutton(form, variable = urano, text = "Urano", font = ("Nasalization Rg", 13)).grid(row = 4, column = 1, sticky = "w", padx = 80)
+Checkbutton(form, variable = nettuno, text = "Nettuno", font = ("Nasalization Rg", 13)).grid(row = 5, column = 1, sticky = "w", padx = 80)
+Checkbutton(form, variable = luna, text = "Luna", font = ("Nasalization Rg", 13)).grid(row = 6, column = 1, sticky = "w", padx = 80)
+
+
+
+def exe():
+    start_date = calendar_start.get_date()
+    stop_date = calendar_stop.get_date()
+    if start_date >= stop_date:
+        messagebox.showerror("Errore!", "Assicurati che la data di inizio preceda la data di fine")
+    elif stop_date > str(datetime.datetime.now().strftime("%Y-%m-%d")):
+        messagebox.showerror("Errore!", "Assicurati che la data di fine sia passata")
+    else:        
+        corpi_celesti["Mercurio"]["selected"] = mercurio.get()
+        corpi_celesti["Venere"]["selected"] = venere.get()
+        corpi_celesti["Terra"]["selected"] = terra.get()
+        corpi_celesti["Marte"]["selected"] = marte.get()
+        corpi_celesti["Giove"]["selected"] = giove.get()
+        corpi_celesti["Saturno"]["selected"] = saturno.get()
+        corpi_celesti["Urano"]["selected"] = urano.get()
+        corpi_celesti["Nettuno"]["selected"] = nettuno.get()
+        corpi_celesti["Luna"]["selected"] = luna.get()
+        script.plot(start_date, stop_date, corpi_celesti)
+
+    
+
+
+Button(form,
+       text = "MOSTRA ORBITE",
+       bg = "#002987",
+       fg = "white",
+       font = ("Nasalization Rg", 18),
+       activebackground = "#215dbf",
+       command = exe).grid(row = 7,
+                         column = 0,
+                         columnspan = 2,
+                         sticky="we",
+                         padx = 30,
+                         pady = 60)
 
 
 
