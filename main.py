@@ -1,6 +1,8 @@
 from tkinter import *
+from tkinter import ttk
 from tkcalendar import *
 from tkinter import messagebox
+from matplotlib import pyplot as plt
 import datetime
 import script
 
@@ -136,7 +138,7 @@ def exe():
         messagebox.showerror("Errore!", "Assicurati che la data di inizio preceda la data di fine")
     elif stop_date > str(datetime.datetime.now().strftime("%Y-%m-%d")):
         messagebox.showerror("Errore!", "Assicurati che la data di fine sia passata")
-    else:        
+    else:
         corpi_celesti["Mercurio"]["selected"] = mercurio.get()
         corpi_celesti["Venere"]["selected"] = venere.get()
         corpi_celesti["Terra"]["selected"] = terra.get()
@@ -146,7 +148,23 @@ def exe():
         corpi_celesti["Urano"]["selected"] = urano.get()
         corpi_celesti["Nettuno"]["selected"] = nettuno.get()
         corpi_celesti["Luna"]["selected"] = luna.get()
-        script.plot(start_date, stop_date, corpi_celesti)
+        selected = mercurio.get() + venere.get()+terra.get()+marte.get()+giove.get()+saturno.get()+urano.get()+nettuno.get()+luna.get()
+        if selected == 0:
+            messagebox.showerror("Errore!", "Selezionare almeno un corpo celeste")
+        else:
+            loading_var = 0
+            for corpo in corpi_celesti:
+                if corpi_celesti[corpo]["selected"]:
+                    values =script.plot(start_date, stop_date, corpo, corpi_celesti, selected)
+                    data_x = values[0]
+                    data_y = values[1]
+                    loading_var += 1/selected*100
+                    progressbar['value']=loading_var
+                    root.update()
+                    print(loading_var)
+                    plt.plot(data_x, data_y)
+            plt.show()
+                    
 
     
 
@@ -157,12 +175,23 @@ Button(form,
        fg = "white",
        font = ("Nasalization Rg", 18),
        activebackground = "#215dbf",
-       command = exe).grid(row = 7,
+       command = exe).grid(row = 8,
                          column = 0,
                          columnspan = 2,
                          sticky="we",
                          padx = 30,
-                         pady = 60)
+                         pady = 15)
+
+s = ttk.Style()
+s.theme_use('default')
+s.configure("TProgressbar", background='#6bcbff', thickness=35)
+progressbar = ttk.Progressbar(form, style = "TProgressbar")
+progressbar.grid(row = 9,
+                column = 0,
+                columnspan = 2,
+                sticky="we",
+                padx = 30,
+                pady = 20)
 
 
 
