@@ -2,14 +2,18 @@ from tkinter import *
 from tkinter import ttk
 from tkcalendar import *
 from tkinter import messagebox
-from matplotlib import pyplot as plt
 import datetime
-import script
 
 root = Tk()
 root.title("Orbite dei corpi celesti")
 root.iconbitmap('img/icon.ico')
-root.geometry('1300x900')
+width = 1300
+height = 900
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+x = screen_width//2 - width//2
+y = screen_height//2 - height//2
+root.geometry(f'{width}x{height}+{x}+{y}')
 root.resizable(False, False)
 
 #fonts
@@ -24,7 +28,7 @@ canvas.pack(fill = "both", expand = True)
 canvas.create_image(0,0,image = bg, anchor = 'nw')
 
 #title
-canvas.create_text(414, 100, anchor = "n",
+canvas.create_text(414, 80, anchor = "n",
                    text="Orbite dei corpi celesti",
                    fill="white",
                    font=("Space Crusaders", 42))
@@ -148,23 +152,12 @@ def exe():
         corpi_celesti["Urano"]["selected"] = urano.get()
         corpi_celesti["Nettuno"]["selected"] = nettuno.get()
         corpi_celesti["Luna"]["selected"] = luna.get()
-        selected = mercurio.get() + venere.get()+terra.get()+marte.get()+giove.get()+saturno.get()+urano.get()+nettuno.get()+luna.get()
+        selected = mercurio.get()+venere.get()+terra.get()+marte.get()+giove.get()+saturno.get()+urano.get()+nettuno.get()+luna.get()
         if selected == 0:
             messagebox.showerror("Errore!", "Selezionare almeno un corpo celeste")
         else:
-            loading_var = 0
-            for corpo in corpi_celesti:
-                if corpi_celesti[corpo]["selected"]:
-                    values =script.plot(start_date, stop_date, corpo, corpi_celesti, selected)
-                    data_x = values[0]
-                    data_y = values[1]
-                    loading_var += 1/selected*100
-                    progressbar['value']=loading_var
-                    root.update()
-                    print(loading_var)
-                    plt.plot(data_x, data_y)
-            plt.show()
-                    
+            import script
+            script.plot(start_date, stop_date, corpi_celesti, selected)
 
     
 
@@ -175,23 +168,24 @@ Button(form,
        fg = "white",
        font = ("Nasalization Rg", 18),
        activebackground = "#215dbf",
-       command = exe).grid(row = 8,
+       command = exe,
+       cursor = 'hand2').grid(row = 8,
                          column = 0,
                          columnspan = 2,
                          sticky="we",
                          padx = 30,
-                         pady = 15)
+                         pady = 60)
 
-s = ttk.Style()
-s.theme_use('default')
-s.configure("TProgressbar", background='#6bcbff', thickness=35)
-progressbar = ttk.Progressbar(form, style = "TProgressbar")
-progressbar.grid(row = 9,
-                column = 0,
-                columnspan = 2,
-                sticky="we",
-                padx = 30,
-                pady = 20)
+button = PhotoImage(file='img/about.png')
+
+about = Button(root,
+               image = button,
+               anchor = "se",
+               bg = 'black',
+               borderwidth=0,
+               activebackground = 'black',
+               cursor = 'hand2')
+canvas.create_window(1248, 848, window = about)
 
 
 
