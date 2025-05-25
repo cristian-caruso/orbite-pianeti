@@ -53,6 +53,13 @@ pip install requests
 pip install time
 ```
 
+Su alcuni sistemi operativi, potrebbe essere necessario installare prima i font presenti nella cartella ```fonts```.
+
+## Esecuzione
+
+Per avviare il programma, assicurati di avere installato tutti i requisiti elencati sopra. Dopodiché, puoi eseguire il file principale del progetto, avvia il file ```main.py```.
+
+
 ## Autore
 
 Cristian Caruso
