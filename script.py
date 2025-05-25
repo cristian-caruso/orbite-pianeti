@@ -1,5 +1,7 @@
-import subprocess
 import time
+import matplotlib
+import requests
+matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
 from tkinter import *
 from tkinter import ttk
@@ -33,13 +35,16 @@ def plot(start, stop, corpi_celesti, selected):
     for corpo in corpi_celesti:
         if corpi_celesti[corpo]["selected"]:
             address = 'https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27' + str(corpi_celesti[corpo]["number_horizon"]) + '%27&OBJ_DATA=%27YES%27&EPHEM_TYPE=%27VECTORS%27&CENTER=%27@sun%27&CSV_FORMAT=%27YES%27&START_TIME=%27' + start + '%27&STOP_TIME=%27' + stop + '%27&STEP_SIZE=%271%20d%27'
-            sp = subprocess.Popen(['wget.exe', '-O', directory, address])
 
-            if sp.wait()!=0:
-                import sys
+            try:
+                response = requests.get(address)
+                response.raise_for_status()
+                f = open(directory, 'w', encoding='utf-8')
+                f.write(response.text)
+                f.close()
+            except Exception as e:
                 loading_window.destroy()
-                loading_window.update()
-                messagebox.showerror("Errore!", "Errore di connessione, assicurarsi di essere connessi a internet o riprovare più tardi!")
+                messagebox.showerror("Errore!", f"Errore di connessione: {e}")
                 sys.exit()
 
             fhand = open(directory,'r')
@@ -57,6 +62,7 @@ def plot(start, stop, corpi_celesti, selected):
                 line = fhand.readline()
             fhand.close()
 
+            plt.figure(num="Grafico orbite")
             plt.plot(data_x, data_y, label = corpo)
             plt.legend()
             loading_var += 1/selected*100
@@ -66,4 +72,5 @@ def plot(start, stop, corpi_celesti, selected):
                 time.sleep(1)
                 loading_window.destroy()
 
+    
     plt.show()

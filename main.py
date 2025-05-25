@@ -3,23 +3,24 @@ from tkinter import ttk
 from tkcalendar import *
 from tkinter import messagebox
 import datetime
+import info
 
 root = Tk()
-root.title("Orbite dei corpi celesti")
+root.title("Oscillazioni Celesti: Un Viaggio nelle Orbite")
 root.iconbitmap('img/icon.ico')
 width = 1300
 height = 900
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
-x = screen_width//2 - width//2
-y = screen_height//2 - height//2
+x = (screen_width - width)//2
+y = (screen_height - height)//2
 root.geometry(f'{width}x{height}+{x}+{y}')
 root.resizable(False, False)
 
 #fonts
 import pyglet
-pyglet.font.add_file('fonts/title.ttf')
-pyglet.font.add_file('fonts/scritte.otf')
+pyglet.font.add_file('fonts/RubikSprayPaint-Regular.ttf')
+pyglet.font.add_file('fonts/Roboto-VariableFont_wdth,wght.ttf')
 
 #background
 bg = PhotoImage(file='img/bg.png').subsample(2)
@@ -31,7 +32,7 @@ canvas.create_image(0,0,image = bg, anchor = 'nw')
 canvas.create_text(414, 80, anchor = "n",
                    text="Orbite dei corpi celesti",
                    fill="white",
-                   font=("Space Crusaders", 42))
+                   font=("Rubik Spray Paint", 42))
 
 #variables
 corpi_celesti = {
@@ -80,7 +81,7 @@ form = Frame(root)
 canvas.create_window(420,500,window=form)
 
 #calendari
-Label(form, text="Scegliere una data di inizio", font=("Nasalization Rg", 15)).grid(row = 0, column = 0, pady = 10)
+Label(form, text="Scegliere una data di inizio", font=("Roboto Regular", 15)).grid(row = 0, column = 0, pady = 10)
 calendar_start = Calendar(form,
                     selectmode = "day",
                     year=datetime.datetime.now().year,
@@ -97,9 +98,9 @@ calendar_start = Calendar(form,
                     selectbackground = "#21b1ff",
                     weekendbackground = "white",
                     weekendforeground = "black",
-                    font=("Nasalization Rg", 10))
+                    font=("Roboto Regular", 10))
 calendar_start.grid(row = 1, column = 0, padx = 15)
-Label(form, text="Scegliere una data di fine", font=("Nasalization Rg", 15)).grid(row = 0, column = 1, pady = 10)
+Label(form, text="Scegliere una data di fine", font=("Roboto Regular", 15)).grid(row = 0, column = 1, pady = 10)
 calendar_stop = Calendar(form, selectmode="day",
                     year=datetime.datetime.now().year,
                     month = datetime.datetime.now().month,
@@ -115,23 +116,23 @@ calendar_stop = Calendar(form, selectmode="day",
                     selectbackground = "#21b1ff",
                     weekendbackground = "white",
                     weekendforeground = "black",
-                    font=("Nasalization Rg", 10))
+                    font=("Roboto Regular", 10))
 calendar_stop.grid(row = 1, column = 1, padx = 15)
 
-Label(form, text = "Selezionare i corpi celesti", font = ("Nasalization Rg", 15)).grid(row = 2,
+Label(form, text = "Selezionare i corpi celesti", font = ("Roboto Regular", 15)).grid(row = 2,
                                                                                        column = 0,
                                                                                        columnspan = 2,
                                                                                        pady = 30)
-Checkbutton(form, variable = mercurio, text = "Mercurio", font = ("Nasalization Rg", 13)).grid(row = 3, column = 0, sticky = "w", padx = 40)
-Checkbutton(form, variable = venere, text = "Venere", font = ("Nasalization Rg", 13)).grid(row = 4, column = 0, sticky = "w", padx = 40)
-Checkbutton(form, variable = terra, text = "Terra", font = ("Nasalization Rg", 13)).grid(row = 5, column = 0, sticky = "w", padx = 40)
-Checkbutton(form, variable = marte, text = "Marte", font = ("Nasalization Rg", 13)).grid(row = 6, column = 0, sticky = "w", padx = 40)
-Checkbutton(form, variable = giove, text = "Giove", font = ("Nasalization Rg", 13)).grid(row = 7, column = 0, sticky = "w", padx = 40)
+Checkbutton(form, variable = mercurio, text = "Mercurio", font = ("Roboto Regular", 13)).grid(row = 3, column = 0, sticky = "w", padx = 40)
+Checkbutton(form, variable = venere, text = "Venere", font = ("Roboto Regular", 13)).grid(row = 4, column = 0, sticky = "w", padx = 40)
+Checkbutton(form, variable = terra, text = "Terra", font = ("Roboto Regular", 13)).grid(row = 5, column = 0, sticky = "w", padx = 40)
+Checkbutton(form, variable = marte, text = "Marte", font = ("Roboto Regular", 13)).grid(row = 6, column = 0, sticky = "w", padx = 40)
+Checkbutton(form, variable = giove, text = "Giove", font = ("Roboto Regular", 13)).grid(row = 7, column = 0, sticky = "w", padx = 40)
 
-Checkbutton(form, variable = saturno, text = "Saturno", font = ("Nasalization Rg", 13)).grid(row = 3, column = 1, sticky = "w", padx = 80)
-Checkbutton(form, variable = urano, text = "Urano", font = ("Nasalization Rg", 13)).grid(row = 4, column = 1, sticky = "w", padx = 80)
-Checkbutton(form, variable = nettuno, text = "Nettuno", font = ("Nasalization Rg", 13)).grid(row = 5, column = 1, sticky = "w", padx = 80)
-Checkbutton(form, variable = luna, text = "Luna", font = ("Nasalization Rg", 13)).grid(row = 6, column = 1, sticky = "w", padx = 80)
+Checkbutton(form, variable = saturno, text = "Saturno", font = ("Roboto Regular", 13)).grid(row = 3, column = 1, sticky = "w", padx = 80)
+Checkbutton(form, variable = urano, text = "Urano", font = ("Roboto Regular", 13)).grid(row = 4, column = 1, sticky = "w", padx = 80)
+Checkbutton(form, variable = nettuno, text = "Nettuno", font = ("Roboto Regular", 13)).grid(row = 5, column = 1, sticky = "w", padx = 80)
+Checkbutton(form, variable = luna, text = "Luna", font = ("Roboto Regular", 13)).grid(row = 6, column = 1, sticky = "w", padx = 80)
 
 
 
@@ -166,7 +167,7 @@ Button(form,
        text = "MOSTRA ORBITE",
        bg = "#002987",
        fg = "white",
-       font = ("Nasalization Rg", 18),
+       font = ("Roboto Bold", 18),
        activebackground = "#215dbf",
        command = exe,
        cursor = 'hand2').grid(row = 8,
@@ -184,7 +185,8 @@ about = Button(root,
                bg = 'black',
                borderwidth=0,
                activebackground = 'black',
-               cursor = 'hand2')
+               cursor = 'hand2',
+               command = info.window)
 canvas.create_window(1248, 848, window = about)
 
 
